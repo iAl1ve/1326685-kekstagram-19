@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Виталий Москвин](https://up.htmlacademy.ru/javascript/19/user/1326685).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Железцов](https://htmlacademy.ru/profile/sench).
 
 ---
 
