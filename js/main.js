@@ -9,7 +9,7 @@ var MAX_AVATAR_COUNT = 6;
 var COMMENT_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var COMMENT_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 
-var message = [
+var messages = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -17,7 +17,7 @@ var message = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 
-var description = [
+var descriptions = [
   'описание фотографии 1',
   'описание фотографии 2',
   'описание фотографии 3',
@@ -25,40 +25,40 @@ var description = [
   'описание фотографии 5'];
 
 // Генерируем случайное целое число в диапазоне, включая минимальное и максимальное, для генерации свойств персонажа
-var getRandomInRange = function (min, max) {
+var getRandomIntegerInRange = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var userComment = [
+var userComments = [
   {
-    avatar: 'img/avatar-' + getRandomInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
-    message: message[getRandomInRange(0, message.length - 1)],
-    name: COMMENT_NAMES[getRandomInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomInRange(0, COMMENT_SURNAMES.length - 1)]
+    avatar: 'img/avatar-' + getRandomIntegerInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
+    message: messages[getRandomIntegerInRange(0, messages.length - 1)],
+    name: COMMENT_NAMES[getRandomIntegerInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomIntegerInRange(0, COMMENT_SURNAMES.length - 1)]
   },
   {
-    avatar: 'img/avatar-' + getRandomInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
-    message: message[getRandomInRange(0, message.length - 1)],
-    name: COMMENT_NAMES[getRandomInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomInRange(0, COMMENT_SURNAMES.length - 1)]
+    avatar: 'img/avatar-' + getRandomIntegerInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
+    message: messages[getRandomIntegerInRange(0, messages.length - 1)],
+    name: COMMENT_NAMES[getRandomIntegerInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomIntegerInRange(0, COMMENT_SURNAMES.length - 1)]
   },
   {
-    avatar: 'img/avatar-' + getRandomInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
-    message: message[getRandomInRange(0, message.length - 1)],
-    name: COMMENT_NAMES[getRandomInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomInRange(0, COMMENT_SURNAMES.length - 1)]
+    avatar: 'img/avatar-' + getRandomIntegerInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
+    message: messages[getRandomIntegerInRange(0, messages.length - 1)],
+    name: COMMENT_NAMES[getRandomIntegerInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomIntegerInRange(0, COMMENT_SURNAMES.length - 1)]
   },
   {
-    avatar: 'img/avatar-' + getRandomInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
-    message: message[getRandomInRange(0, message.length - 1)],
-    name: COMMENT_NAMES[getRandomInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomInRange(0, COMMENT_SURNAMES.length - 1)]
+    avatar: 'img/avatar-' + getRandomIntegerInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
+    message: messages[getRandomIntegerInRange(0, messages.length - 1)],
+    name: COMMENT_NAMES[getRandomIntegerInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomIntegerInRange(0, COMMENT_SURNAMES.length - 1)]
   },
   {
-    avatar: 'img/avatar-' + getRandomInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
-    message: message[getRandomInRange(0, message.length - 1)],
-    name: COMMENT_NAMES[getRandomInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomInRange(0, COMMENT_SURNAMES.length - 1)]
+    avatar: 'img/avatar-' + getRandomIntegerInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
+    message: messages[getRandomIntegerInRange(0, messages.length - 1)],
+    name: COMMENT_NAMES[getRandomIntegerInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomIntegerInRange(0, COMMENT_SURNAMES.length - 1)]
   },
   {
-    avatar: 'img/avatar-' + getRandomInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
-    message: message[getRandomInRange(0, message.length - 1)],
-    name: COMMENT_NAMES[getRandomInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomInRange(0, COMMENT_SURNAMES.length - 1)]
+    avatar: 'img/avatar-' + getRandomIntegerInRange(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT) + '.svg',
+    message: messages[getRandomIntegerInRange(0, messages.length - 1)],
+    name: COMMENT_NAMES[getRandomIntegerInRange(0, COMMENT_NAMES.length - 1)] + ' ' + COMMENT_SURNAMES[getRandomIntegerInRange(0, COMMENT_SURNAMES.length - 1)]
   }
 ];
 
@@ -71,7 +71,7 @@ var pictureTemplate = document.querySelector('#picture')
 // Перемешиваем комментарии для изображений
 var shuffleComments = function (arrComments) {
   for (var i = 0; i < arrComments.length - 1; i++) {
-    var j = getRandomInRange(0, arrComments.length - 1);
+    var j = getRandomIntegerInRange(0, arrComments.length - 1);
     var buffer = arrComments[i];
     arrComments[i] = arrComments[j];
     arrComments[j] = buffer;
@@ -85,7 +85,7 @@ var getRandomComments = function (arrComments) {
   // Перешаем комментарии
   arrComments = shuffleComments(arrComments);
 
-  var newArrComments = arrComments.slice(0, getRandomInRange(1, arrComments.length - 1));
+  var newArrComments = arrComments.slice(0, getRandomIntegerInRange(1, arrComments.length - 1));
 
   return newArrComments;
 };
@@ -95,9 +95,9 @@ var createPhotos = function (arrPhotos) {
   for (var i = 1; i <= COUNT_IMG; i++) {
     arrPhotos.push({
       url: 'photos/' + i + '.jpg',
-      description: description[getRandomInRange(0, description.length - 1)],
-      likes: getRandomInRange(MIN_LIKES, MAX_LIKES),
-      comments: getRandomComments(userComment)
+      description: descriptions[getRandomIntegerInRange(0, descriptions.length - 1)],
+      likes: getRandomIntegerInRange(MIN_LIKES, MAX_LIKES),
+      comments: getRandomComments(userComments)
     });
   }
 
