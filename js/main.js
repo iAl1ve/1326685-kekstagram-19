@@ -80,9 +80,9 @@ var shuffleComments = function (arrComments) {
   return arrComments;
 };
 
-// Получим новый случай массив с комметариями
+// Получим новый случайный массив с комметариями
 var getRandomComments = function (arrComments) {
-  // Перешаем комментарии
+  // Перемешиваем комментарии
   arrComments = shuffleComments(arrComments);
 
   var newArrComments = arrComments.slice(0, getRandomIntegerInRange(1, arrComments.length - 1));
