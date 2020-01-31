@@ -5,7 +5,7 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_AVATAR_COUNT = 1;
 var MAX_AVATAR_COUNT = 6;
-var AVATAR_SIZE = 35;
+var AVATAR_SIZE = 35; // Размер фотографии аватарки комментатора
 
 var COMMENT_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var COMMENT_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
@@ -76,6 +76,10 @@ var bigPictureLike = document.querySelector('.likes-count');
 var bigPictureDescription = document.querySelector('.social__caption');
 var bigPictureComments = document.querySelector('.social__comments');
 var bigPictureCountComments = document.querySelector('.comments-count');
+
+// Cкрываем по условию блок счётчика комментариев и загрузки новых
+document.querySelector('.social__comment-count').classList.add('hidden');
+document.querySelector('.comments-loader').classList.add('hidden');
 
 // Перемешиваем комментарии для изображений
 var shuffleComments = function (arrComments) {
@@ -177,6 +181,7 @@ var showCommentsPicture = function (comments) {
   bigPictureComments.appendChild(fragment);
 };
 
+// Показываем фотографию в полноразмерном режиме
 var showBigPicture = function (currentPhoto) {
   bigPictureImg.querySelector('img').src = currentPhoto.url;
 
@@ -187,10 +192,6 @@ var showBigPicture = function (currentPhoto) {
   // Удаляем все комментарии из шаблона и показываем сгенерированные
   removeChildOfParrent(bigPictureComments);
   showCommentsPicture(currentPhoto.comments);
-
-  // Cкрываем по условию блок счётчика комментариев и загрузки новых
-  document.querySelector('.social__comment-count').classList.add('hidden');
-  document.querySelector('.comments-loader').classList.add('hidden');
 };
 
 var photos = [];
