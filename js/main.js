@@ -5,6 +5,7 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_AVATAR_COUNT = 1;
 var MAX_AVATAR_COUNT = 6;
+var AVATAR_SIZE = 35;
 
 var COMMENT_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var COMMENT_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
@@ -68,6 +69,14 @@ var pictureTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture');
 
+var bodyElement = document.querySelector('body');
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureImg = document.querySelector('.big-picture__img');
+var bigPictureLike = document.querySelector('.likes-count');
+var bigPictureDescription = document.querySelector('.social__caption');
+var bigPictureComments = document.querySelector('.social__comments');
+var bigPictureCountComments = document.querySelector('.comments-count');
+
 // Перемешиваем комментарии для изображений
 var shuffleComments = function (arrComments) {
   for (var i = 0; i < arrComments.length - 1; i++) {
@@ -104,7 +113,7 @@ var createPhotos = function (arrPhotos) {
   return arrPhotos;
 };
 
-// Генеруем изображения
+// Генерируем изображения
 var renderPicture = function (photo) {
   var photoElement = pictureTemplate.cloneNode(true);
 
@@ -127,7 +136,69 @@ var addListPicture = function (listPictures) {
   listPictures.appendChild(fragment);
 };
 
+// Удаляем всех детей родительского элемента
+var removeChildOfParrent = function (elementParrent) {
+  while (elementParrent.firstChild) {
+    elementParrent.removeChild(elementParrent.firstChild);
+  }
+};
+
+// Показываем комментарии для большого изображения
+var renderComments = function (comment) {
+
+  var newComment = document.createElement('li');
+  newComment.classList.add('social__comment');
+
+  var newAvatarPicture = document.createElement('img');
+  newAvatarPicture.classList.add('social__picture');
+  newAvatarPicture.src = comment.avatar;
+  newAvatarPicture.alt = comment.name;
+  newAvatarPicture.width = AVATAR_SIZE;
+  newAvatarPicture.height = AVATAR_SIZE;
+
+  var newCommentText = document.createElement('p');
+  newCommentText.classList.add('social__text');
+  newCommentText.textContent = comment.message;
+
+  newComment.appendChild(newAvatarPicture);
+  newComment.appendChild(newCommentText);
+
+  return newComment;
+};
+
+// Показываем все комментарии к фотографии
+var showCommentsPicture = function (comments) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < comments.length; i++) {
+    fragment.appendChild(renderComments(comments[i]));
+  }
+
+  bigPictureComments.appendChild(fragment);
+};
+
+var showBigPicture = function (currentPhoto) {
+  bigPictureImg.querySelector('img').src = currentPhoto.url;
+
+  bigPictureLike.textContent = currentPhoto.like;
+  bigPictureDescription.textContent = currentPhoto.description;
+  bigPictureCountComments.textContent = currentPhoto.comments.length;
+
+  // Удаляем все комментарии из шаблона и показываем сгенерированные
+  removeChildOfParrent(bigPictureComments);
+  showCommentsPicture(currentPhoto.comments);
+
+  // Cкрываем по условию блок счётчика комментариев и загрузки новых
+  document.querySelector('.social__comment-count').classList.add('hidden');
+  document.querySelector('.comments-loader').classList.add('hidden');
+};
+
 var photos = [];
 createPhotos(photos);
+var currentBigPhoto = photos[0];
 
 addListPicture(userListPictures);
+showBigPicture(currentBigPhoto);
+
+bigPicture.classList.remove('hidden');
+bodyElement.classList.add('modal-open');
