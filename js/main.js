@@ -73,14 +73,13 @@ var pictureTemplate = document.querySelector('#picture')
     .querySelector('.picture');
 
 var bodyElement = document.querySelector('body');
-var bigPicture = document.querySelector('.big-picture');
+// var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = document.querySelector('.big-picture__img');
 var bigPictureLike = document.querySelector('.likes-count');
 var bigPictureDescription = document.querySelector('.social__caption');
 var bigPictureComments = document.querySelector('.social__comments');
 var bigPictureCountComments = document.querySelector('.comments-count');
 var uploadFileInput = document.querySelector('#upload-file');
-var uploadImageForm = document.querySelector('.img-upload__overlay');
 var uploadImageOverlay = document.querySelector('.img-upload__overlay');
 var closeUploadImageForm = document.querySelector('#upload-cancel');
 var uploadForm = document.querySelector('#upload-select-image');
@@ -96,7 +95,6 @@ var effectLevelDepth = document.querySelector('.effect-level__depth');
 var effectRadio = document.querySelectorAll('.effects__radio');
 var textHashtags = document.querySelector('.text__hashtags');
 var textDescription = document.querySelector('.text__description');
-
 
 
 // Cкрываем по условию блок счётчика комментариев и загрузки новых
@@ -218,8 +216,8 @@ var showBigPicture = function (currentPhoto) {
 
 // Закрытие формы загрузки изображения по ESC
 var onKeyCloseUploadImageForm = function (evt) {
-  if ( evt.target.className !== textHashtags.className && evt.target.className !== textDescription.className) {
-    if (evt.keyCode === KEY_ESC ) {
+  if (evt.target.className !== textHashtags.className && evt.target.className !== textDescription.className) {
+    if (evt.keyCode === KEY_ESC) {
       onCloseUploadImageForm();
     }
   }
@@ -232,7 +230,7 @@ var onChangeScaleControl = function (evt) {
   if (scale <= 100 && scale > 0) {
     scaleControlValue.value = scale;
     scale /= 100;
-    imageUploadPreview.style.transform = 'scale('+ scale +')';
+    imageUploadPreview.style.transform = 'scale(' + scale + ')';
   }
 };
 
@@ -247,7 +245,7 @@ var onChangeEffectLevelPin = function (moveEvt) {
   var levelPinCoords = effectLevelPin.getBoundingClientRect().left + pageXOffset;
   var saturation = ((levelPinCoords - sliderLineCoords.left + effectLevelPin.offsetWidth / 2) / sliderCoords.width).toFixed(2);
   effectLevelValue.value = saturation * 100;
-  alert('Уровень насыщенности будет = ' + saturation);
+  // alert('Уровень насыщенности будет = ' + saturation);
 };
 
 // Переключаем эффекты
@@ -311,10 +309,10 @@ var validateHashtags = function () {
     if (hashtag.length > 20) {
       errorMessage += 'Максимальная длина одного хэш-тега 20 символов, включая решётку. ';
       validate = false;
-    } else if (hashtag.length === 1 && hashtag === '#') {
+    } else if (hashtag === '#') {
       errorMessage += 'Хеш-тег не может состоять только из одной решётки. ';
       validate = false;
-    } else if (hashtag[0] !== '#') {
+    } else if (hashtag[0] !== '#' && hashtag.length > 0) {
       errorMessage += 'Хэш-тег должен начинаться с символа # (решётка). ';
       validate = false;
     } else if (/[^a-zA-Z0-9А-Яа-я]/.test(hashtag.substr(1, (hashtag.length - 1)))) {
@@ -328,6 +326,13 @@ var validateHashtags = function () {
   return validate;
 };
 
+// Отправка формы по ENTER
+var onEnterSubmitImageForm = function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    onSubmitImageForm();
+  }
+};
+
 // Функция отключения события при закрытии формы
 var disableEventsListener = function () {
   closeUploadImageForm.removeEventListener('click', onCloseUploadImageForm);
@@ -337,6 +342,7 @@ var disableEventsListener = function () {
   onDeleteEffectRadio();
   uploadForm.removeEventListener('submit', onSubmitImageForm);
   uploadSubmitButton.removeEventListener('click', onSubmitImageForm);
+  uploadSubmitButton.removeEventListener('keydown', onEnterSubmitImageForm);
 };
 
 var onSubmitImageForm = function (evt) {
@@ -347,7 +353,7 @@ var onSubmitImageForm = function (evt) {
   }
 };
 
-var onCloseUploadImageForm = function (evt) {
+var onCloseUploadImageForm = function () {
   uploadImageOverlay.classList.add('hidden');
   uploadFileInput.addEventListener('change', onChangeUploadFile);
   disableEventsListener();
@@ -355,7 +361,7 @@ var onCloseUploadImageForm = function (evt) {
 };
 
 // Открываем форму загрузки изображения, подключаем события
-var onChangeUploadFile = function (evt) {
+var onChangeUploadFile = function () {
   uploadImageOverlay.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
   scaleControlValue.value = 100;
@@ -368,6 +374,7 @@ var onChangeUploadFile = function (evt) {
   effectLevelPin.addEventListener('mouseup', onChangeEffectLevelPin);
   uploadForm.addEventListener('submit', onSubmitImageForm);
   uploadSubmitButton.addEventListener('click', onSubmitImageForm);
+  uploadSubmitButton.addEventListener('keydown', onEnterSubmitImageForm);
 };
 
 var startApp = function () {
@@ -376,7 +383,7 @@ var startApp = function () {
   addListPicture(userListPictures);
   showBigPicture(currentBigPhoto);
 
-  //bigPicture.classList.remove('hidden');
+  // bigPicture.classList.remove('hidden');
 
   uploadFileInput.addEventListener('change', onChangeUploadFile);
 };
