@@ -9,6 +9,8 @@ var AVATAR_SIZE = 35; // Размер фотографии аватарки ко
 var KEY_ESC = 27;
 var KEY_ENTER = 13;
 var SCALE_STEP = 25;
+var HASHTAG_COUNT = 5;
+var HASHTAG_LENGTH = 20;
 
 var COMMENT_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var COMMENT_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
@@ -245,7 +247,6 @@ var onChangeEffectLevelPin = function (moveEvt) {
   var levelPinCoords = effectLevelPin.getBoundingClientRect().left + pageXOffset;
   var saturation = ((levelPinCoords - sliderLineCoords.left + effectLevelPin.offsetWidth / 2) / sliderCoords.width).toFixed(2);
   effectLevelValue.value = saturation * 100;
-  // alert('Уровень насыщенности будет = ' + saturation);
 };
 
 // Переключаем эффекты
@@ -262,16 +263,16 @@ var onChangeEffectRadio = function (evt) {
 
 // Добавляем события на эффекты
 var onAddEffectRadio = function () {
-  for (var i = 0; i < effectRadio.length; i++) {
-    effectRadio[i].addEventListener('change', onChangeEffectRadio);
-  }
+  effectRadio.forEach(function (element) {
+    element.addEventListener('change', onChangeEffectRadio);
+  });
 };
 
 // Удаляем события на эффекты
 var onDeleteEffectRadio = function () {
-  for (var i = 0; i < effectRadio.length; i++) {
-    effectRadio[i].removeEventListener('change', onChangeEffectRadio);
-  }
+  effectRadio.forEach(function (element) {
+    element.removeEventListener('change', onChangeEffectRadio);
+  });
 };
 
 // Поиск повторяющихся элементов
@@ -299,25 +300,32 @@ var validateHashtags = function () {
   var errorMessage = '';
   var validate = true;
 
-  if (hashtags.length > 5) {
+  if (hashtags.length > HASHTAG_COUNT) {
     errorMessage += 'Нельзя указать больше пяти хэш-тегов. ';
     validate = false;
   } else if (findDuplicateHashtags(hashtags)) {
     errorMessage += 'Один и тот же хэш-тег не может быть использован дважды. ';
+    validate = false;
   }
+
   hashtags.forEach(function (hashtag) {
-    if (hashtag.length > 20) {
-      errorMessage += 'Максимальная длина одного хэш-тега 20 символов, включая решётку. ';
-      validate = false;
-    } else if (hashtag === '#') {
-      errorMessage += 'Хеш-тег не может состоять только из одной решётки. ';
-      validate = false;
-    } else if (hashtag[0] !== '#' && hashtag.length > 0) {
-      errorMessage += 'Хэш-тег должен начинаться с символа # (решётка). ';
-      validate = false;
-    } else if (/[^a-zA-Z0-9А-Яа-я]/.test(hashtag.substr(1, (hashtag.length - 1)))) {
-      errorMessage += 'Строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т.п.), символы пунктуации (тире, дефис, запятая и т.п.), эмодзи и т.д. ';
-      validate = false;
+    switch (true) {
+      case (hashtag.length > HASHTAG_LENGTH) :
+        errorMessage += 'Максимальная длина одного хэш-тега 20 символов, включая решётку. ';
+        validate = false;
+        break;
+      case (hashtag === '#') :
+        errorMessage += 'Хеш-тег не может состоять только из одной решётки. ';
+        validate = false;
+        break;
+      case (hashtag[0] !== '#' && hashtag.length > 0) :
+        errorMessage += 'Хэш-тег должен начинаться с символа # (решётка). ';
+        validate = false;
+        break;
+      case (/[^a-zA-Z0-9А-Яа-я]/.test(hashtag.substr(1, (hashtag.length - 1)))) :
+        errorMessage += 'Строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т.п.), символы пунктуации (тире, дефис, запятая и т.п.), эмодзи и т.д. ';
+        validate = false;
+        break;
     }
   });
 
@@ -382,8 +390,6 @@ var startApp = function () {
 
   addListPicture(userListPictures);
   showBigPicture(currentBigPhoto);
-
-  // bigPicture.classList.remove('hidden');
 
   uploadFileInput.addEventListener('change', onChangeUploadFile);
 };
