@@ -11,6 +11,7 @@ var KEY_ENTER = 13;
 var SCALE_STEP = 25;
 var HASHTAG_COUNT = 5;
 var HASHTAG_LENGTH = 20;
+var COMMENTS_LENGTH = 140;
 
 var COMMENT_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var COMMENT_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
@@ -75,7 +76,8 @@ var pictureTemplate = document.querySelector('#picture')
     .querySelector('.picture');
 
 var bodyElement = document.querySelector('body');
-// var bigPicture = document.querySelector('.big-picture');
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureClose = document.querySelector('#picture-cancel');
 var bigPictureImg = document.querySelector('.big-picture__img');
 var bigPictureLike = document.querySelector('.likes-count');
 var bigPictureDescription = document.querySelector('.social__caption');
@@ -214,6 +216,51 @@ var showBigPicture = function (currentPhoto) {
   // Удаляем все комментарии из шаблона и показываем сгенерированные
   removeChildOfParrent(bigPictureComments);
   showCommentsPicture(currentPhoto.comments);
+
+  bigPicture.classList.remove('hidden');
+  bodyElement.classList.add('modal-open');
+};
+
+// Показываем фотографию в полноразмерном режиме
+var openBigPicture = function (evt) {
+  // Получим заново список всех сгенерированных изображений
+  var picturesArr = userListPictures.querySelectorAll('.picture');
+  var element;
+  var arr = Array.from(picturesArr);
+  if (evt.target.className === 'picture__img') {
+    element = evt.target.parentElement;
+  } else if (evt.target.className === 'picture') {
+    element = evt.target;
+  }
+
+  if (evt.target.className === 'picture__img' || evt.target.className === 'picture') {
+    document.addEventListener('keydown', onEscPressBigPicture);
+    bigPictureClose.addEventListener('click', onCloseBigPicture);
+    userListPictures.removeEventListener('keydown', openEnterBigPicture);
+    showBigPicture(photos[arr.indexOf(element)]);
+  }
+};
+
+// Открытие большой фотографию по ENTER
+var openEnterBigPicture = function (evt) {
+  if (evt.keyCode === KEY_ENTER) {
+    openBigPicture();
+  }
+};
+
+// Функции закрытия полноразмернго режима для просмотра фотографии
+var onCloseBigPicture = function () {
+  bigPicture.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+  document.removeEventListener('keydown', onEscPressBigPicture);
+  bigPictureClose.removeEventListener('click', onCloseBigPicture);
+  userListPictures.addEventListener('keydown', openEnterBigPicture);
+};
+
+var onEscPressBigPicture = function (evt) {
+  if (evt.keyCode === KEY_ESC) {
+    onCloseBigPicture();
+  }
 };
 
 // Закрытие формы загрузки изображения по ESC
@@ -334,6 +381,16 @@ var validateHashtags = function () {
   return validate;
 };
 
+var validateComment = function () {
+  var validate = true;
+  if (textDescription.value.length > COMMENTS_LENGTH) {
+    textDescription.setCustomValidity('Длина комментария к изображению не должна превышать ' + COMMENTS_LENGTH + ' символов');
+    validate = false;
+  }
+
+  return validate;
+};
+
 // Отправка формы по ENTER
 var onEnterSubmitImageForm = function (evt) {
   if (evt.keyCode === KEY_ENTER) {
@@ -351,11 +408,12 @@ var disableEventsListener = function () {
   uploadForm.removeEventListener('submit', onSubmitImageForm);
   uploadSubmitButton.removeEventListener('click', onSubmitImageForm);
   uploadSubmitButton.removeEventListener('keydown', onEnterSubmitImageForm);
+  bodyElement.classList.remove('modal-open');
 };
 
 var onSubmitImageForm = function (evt) {
   evt.preventDefault();
-  if (validateHashtags()) {
+  if (validateHashtags() && validateComment()) {
     disableEventsListener();
     uploadForm.submit();
   }
@@ -386,12 +444,11 @@ var onChangeUploadFile = function () {
 };
 
 var startApp = function () {
-  var currentBigPhoto = photos[0];
-
   addListPicture(userListPictures);
-  showBigPicture(currentBigPhoto);
-
   uploadFileInput.addEventListener('change', onChangeUploadFile);
+  userListPictures.addEventListener('click', openBigPicture);
+  userListPictures.addEventListener('keydown', openEnterBigPicture);
+
 };
 
 var photos = [];
