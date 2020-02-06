@@ -236,6 +236,7 @@ var openBigPicture = function (evt) {
   if (evt.target.className === 'picture__img' || evt.target.className === 'picture') {
     document.addEventListener('keydown', onEscPressBigPicture);
     bigPictureClose.addEventListener('click', onCloseBigPicture);
+    userListPictures.removeEventListener('keydown', openEnterBigPicture);
     showBigPicture(photos[arr.indexOf(element)]);
   }
 };
@@ -253,6 +254,7 @@ var onCloseBigPicture = function () {
   bodyElement.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscPressBigPicture);
   bigPictureClose.removeEventListener('click', onCloseBigPicture);
+  userListPictures.addEventListener('keydown', openEnterBigPicture);
 };
 
 var onEscPressBigPicture = function (evt) {
