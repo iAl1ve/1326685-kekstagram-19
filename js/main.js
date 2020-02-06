@@ -11,7 +11,7 @@ var KEY_ENTER = 13;
 var SCALE_STEP = 25;
 var HASHTAG_COUNT = 5;
 var HASHTAG_LENGTH = 20;
-var DESCRIPTION_LENGTH = 140;
+var COMMENTS_LENGTH = 140;
 
 var COMMENT_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var COMMENT_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
@@ -383,8 +383,8 @@ var validateHashtags = function () {
 
 var validateComment = function () {
   var validate = true;
-  if (textDescription.value.length > DESCRIPTION_LENGTH) {
-    textDescription.setCustomValidity('Длина комментария к изображению не должна превышать ' + DESCRIPTION_LENGTH + ' символов');
+  if (textDescription.value.length > COMMENTS_LENGTH) {
+    textDescription.setCustomValidity('Длина комментария к изображению не должна превышать ' + COMMENTS_LENGTH + ' символов');
     validate = false;
   }
 
