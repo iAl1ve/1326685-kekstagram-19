@@ -105,7 +105,7 @@
 
   window.data = {
     photos: photos,
-    countImg : COUNT_IMG
+    countImg: COUNT_IMG
   };
 
 })();
