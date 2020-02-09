@@ -18,13 +18,10 @@
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var imageUploadPreview = document.querySelector('.img-upload__preview');
   var effectLevelPin = document.querySelector('.effect-level__pin');
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  var effectLevelLine = document.querySelector('.effect-level__line');
-  var effectLevelDepth = document.querySelector('.effect-level__depth');
   var effectRadio = document.querySelectorAll('.effects__radio');
+  var effectList = document.querySelector('.effects__list');
   var textHashtags = document.querySelector('.text__hashtags');
   var textDescription = document.querySelector('.text__description');
-
 
   // Закрытие формы загрузки изображения по ESC
   var onKeyCloseUploadImageForm = function (evt) {
@@ -42,29 +39,40 @@
     }
   };
 
-  // Насыщенность
-  var onChangeEffectLevelPin = function (moveEvt) {
-    moveEvt.preventDefault();
-    var sliderLineCoords = effectLevelLine.getBoundingClientRect();
-    var sliderCoords = {
-      left: sliderLineCoords.left + pageXOffset,
-      width: sliderLineCoords.width
-    };
-    var levelPinCoords = effectLevelPin.getBoundingClientRect().left + pageXOffset;
-    var saturation = ((levelPinCoords - sliderLineCoords.left + effectLevelPin.offsetWidth / 2) / sliderCoords.width).toFixed(2);
-    effectLevelValue.value = saturation * 100;
-  };
-
   // Переключаем эффекты
   var onChangeEffectRadio = function (evt) {
-    imageUploadPreview.querySelector('img').className = '';
-    var currentEffect = evt.target.value !== 'none' ? 'effects__preview--' + evt.target.value : null;
-    imageUploadPreview.querySelector('img').classList.add(currentEffect);
     // Сбрасываем по умолчанию при переключении
-    effectLevelPin.style.left = '100%';
-    effectLevelDepth.style.width = '100%';
-    imageUploadPreview.style.filter = '';
-    effectLevelValue.value = 100;
+    window.slider.reset();
+    var currentEffect = evt.target.value !== 'none' ? 'effects__preview--' + evt.target.value : null;
+    evt.target.checked = true;
+    imageUploadPreview.querySelector('img').classList.add(currentEffect);
+  };
+
+  var setEffectImage = function (value) {
+    imageUploadPreview.querySelector('img').style = value;
+  };
+
+  var setEffectLevel = function (effectValue) {
+    var currentEffect = effectList.querySelector('input[name=effect]:checked').value;
+    switch (currentEffect) {
+      case 'chrome':
+        setEffectImage('filter: grayscale(' + (effectValue / 100).toFixed(2) + ')');
+        break;
+      case 'sepia':
+        setEffectImage('filter: sepia(' + (effectValue / 100).toFixed(2) + ')');
+        break;
+      case 'marvin':
+        setEffectImage('filter: invert(' + effectValue + '%)');
+        break;
+      case 'phobos':
+        setEffectImage('filter: blur(' + (effectValue * 0.03) + 'px)');
+        break;
+      case 'heat':
+        setEffectImage('filter: brightness(' + (1 + (effectValue * 0.02)) + ')');
+        break;
+      default:
+        imageUploadPreview.querySelector('img').style = null;
+    }
   };
 
   // Добавляем события на эффекты
@@ -165,6 +173,7 @@
     uploadForm.removeEventListener('submit', onSubmitImageForm);
     uploadSubmitButton.removeEventListener('click', onSubmitImageForm);
     uploadSubmitButton.removeEventListener('keydown', onEnterSubmitImageForm);
+    effectLevelPin.removeEventListener('mousedown', window.slider.move);
     bodyElement.classList.remove('modal-open');
   };
 
@@ -194,11 +203,15 @@
     scaleControlSmaller.addEventListener('click', onChangeScaleControl);
     scaleControlBigger.addEventListener('click', onChangeScaleControl);
     onAddEffectRadio();
-    effectLevelPin.addEventListener('mouseup', onChangeEffectLevelPin);
+    effectLevelPin.addEventListener('mousedown', window.slider.move);
     uploadForm.addEventListener('submit', onSubmitImageForm);
     uploadSubmitButton.addEventListener('click', onSubmitImageForm);
     uploadSubmitButton.addEventListener('keydown', onEnterSubmitImageForm);
   };
 
   uploadFileInput.addEventListener('change', onChangeUploadFile);
+
+  window.form = {
+    setEffectLevel: setEffectLevel
+  };
 })();
