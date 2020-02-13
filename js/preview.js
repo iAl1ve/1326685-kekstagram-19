@@ -2,6 +2,7 @@
 
 (function () {
   var AVATAR_SIZE = 35;
+  var COMMENTS_COUNT = 5;
 
   var bodyElement = document.querySelector('body');
   var userListPictures = document.querySelector('.pictures');
@@ -18,9 +19,9 @@
   document.querySelector('.comments-loader').classList.add('hidden');
 
   // Удаляем всех детей родительского элемента
-  var removeChildOfParrent = function (elementParrent) {
-    while (elementParrent.firstChild) {
-      elementParrent.removeChild(elementParrent.firstChild);
+  var removeChildOfParent = function (elementParent) {
+    while (elementParent.firstChild) {
+      elementParent.removeChild(elementParent.firstChild);
     }
   };
 
@@ -29,7 +30,6 @@
 
     var newComment = document.createElement('li');
     newComment.classList.add('social__comment');
-
     var newAvatarPicture = document.createElement('img');
     newAvatarPicture.classList.add('social__picture');
     newAvatarPicture.src = comment.avatar;
@@ -50,8 +50,8 @@
   // Показываем все комментарии к фотографии
   var showCommentsPicture = function (comments) {
     var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < comments.length; i++) {
+    var countComments = comments.length > COMMENTS_COUNT ? COMMENTS_COUNT : comments.length;
+    for (var i = 0; i < countComments; i++) {
       fragment.appendChild(renderComments(comments[i]));
     }
 
@@ -67,7 +67,7 @@
     bigPictureCountComments.textContent = currentPhoto.comments.length;
 
     // Удаляем все комментарии из шаблона и показываем сгенерированные
-    removeChildOfParrent(bigPictureComments);
+    removeChildOfParent(bigPictureComments);
     showCommentsPicture(currentPhoto.comments);
 
     bigPicture.classList.remove('hidden');
@@ -90,7 +90,7 @@
       document.addEventListener('keydown', onEscPressBigPicture);
       bigPictureClose.addEventListener('click', onCloseBigPicture);
       userListPictures.removeEventListener('keydown', openEnterBigPicture);
-      showBigPicture(window.data.photos[arr.indexOf(element)]);
+      showBigPicture(window.picture.photos[arr.indexOf(element)]);
     }
   };
 

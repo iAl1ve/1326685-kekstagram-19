@@ -38,11 +38,11 @@
     var onMouseUp = function (moveEvt) {
       moveEvt.preventDefault();
 
-      effectLevelPin.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mousemove', onMouseMove);
       effectLevelPin.removeEventListener('mouseup', onMouseUp);
     };
 
-    effectLevelPin.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousemove', onMouseMove);
     effectLevelPin.addEventListener('mouseup', onMouseUp);
   };
 
