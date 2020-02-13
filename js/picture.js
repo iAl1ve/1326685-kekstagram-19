@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var COUNT_IMG = 25;
+  var ERROR_STYLE_TEXT = 'position: absolute; left: 0%; right: 0%;z-index: 100; margin: 0 auto; height: auto; text-align: center; line-height: 1.2em; background-color: red; padding: 6px 0px;';
+  var ERROR_STYLE_FONTSIZE = '26px';
+  var photos = [];
   var userListPictures = document.querySelector('.pictures');
   var pictureTemplate = document.querySelector('#picture')
     .content
@@ -18,16 +22,34 @@
     return photoElement;
   };
 
-  // Добавляем изображения в контейнер для отображения
-  var addListPicture = function (listPictures) {
+  // Показываем изображения и добавляем в массив для отображения
+  var onSuccessLoad = function (pictures) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < window.data.countImg; i++) {
-      fragment.appendChild(renderPicture(window.data.photos[i]));
+    for (var i = 0; i < COUNT_IMG; i++) {
+      fragment.appendChild(renderPicture(pictures[i]));
+      photos.push({
+        url: pictures[i].url,
+        description: pictures[i].description,
+        likes: pictures[i].like,
+        comments: pictures[i].comments
+      });
     }
-
-    listPictures.appendChild(fragment);
+    userListPictures.appendChild(fragment);
   };
 
-  addListPicture(userListPictures);
+  var onErrorLoad = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = ERROR_STYLE_TEXT;
+    node.style.fontSize = ERROR_STYLE_FONTSIZE;
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  window.backend.load(onSuccessLoad, onErrorLoad);
+
+  window.picture = {
+    photos: photos
+  };
 })();

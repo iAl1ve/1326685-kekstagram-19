@@ -2,6 +2,7 @@
 
 (function () {
   var AVATAR_SIZE = 35;
+  var COMMENTS_COUNT = 5;
 
   var bodyElement = document.querySelector('body');
   var userListPictures = document.querySelector('.pictures');
@@ -51,7 +52,7 @@
   var showCommentsPicture = function (comments) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < comments.length; i++) {
+    for (var i = 0; i < COMMENTS_COUNT; i++) {
       fragment.appendChild(renderComments(comments[i]));
     }
 
@@ -90,7 +91,7 @@
       document.addEventListener('keydown', onEscPressBigPicture);
       bigPictureClose.addEventListener('click', onCloseBigPicture);
       userListPictures.removeEventListener('keydown', openEnterBigPicture);
-      showBigPicture(window.data.photos[arr.indexOf(element)]);
+      showBigPicture(window.picture.photos[arr.indexOf(element)]);
     }
   };
 
