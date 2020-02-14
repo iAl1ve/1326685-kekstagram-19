@@ -29,9 +29,17 @@ window.util = function () {
     }
   };
 
+  // Удаляем всех детей родительского элемента
+  var removeChildOfParent = function (elementParent) {
+    while (elementParent.firstChild) {
+      elementParent.removeChild(elementParent.firstChild);
+    }
+  };
+
   return {
     isEscEvent: onEscPress,
     isEscFormEvent: onEscPressForm,
-    isEnterEvent: onEnterPress
+    isEnterEvent: onEnterPress,
+    removeChild: removeChildOfParent
   };
 }();

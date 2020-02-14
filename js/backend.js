@@ -2,6 +2,7 @@
 
 (function () {
   var URL = 'https://js.dump.academy/kekstagram/data';
+  var URL_SAVE = 'https://js.dump.academy/kekstagram/';
 
   var StatusCode = {
     OK: 200,
@@ -47,8 +48,30 @@
     xhr.send();
   };
 
+  var saveData = function (data, onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+    xhr.timeout = TIMEOUT_IN_MS;
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === StatusCode.OK && xhr.readyState === READY_STATE_LOAD) {
+        onLoad(xhr.response, 'Изображение успешно загружено');
+      } else {
+        onError('Изображение не смогло отправиться на сервер. Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
+
+    xhr.addEventListener('timeout', function () {
+      onError('Данные не успели отправиться за ' + xhr.timeout + ' мс');
+    });
+
+    xhr.open('POST', URL_SAVE);
+    xhr.send(data);
+  };
+
   window.backend = {
-    load: loadData
+    load: loadData,
+    save: saveData
   };
 
 })();

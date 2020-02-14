@@ -18,13 +18,6 @@
   document.querySelector('.social__comment-count').classList.add('hidden');
   document.querySelector('.comments-loader').classList.add('hidden');
 
-  // Удаляем всех детей родительского элемента
-  var removeChildOfParent = function (elementParent) {
-    while (elementParent.firstChild) {
-      elementParent.removeChild(elementParent.firstChild);
-    }
-  };
-
   // Показываем комментарии для большого изображения
   var renderComments = function (comment) {
 
@@ -67,7 +60,7 @@
     bigPictureCountComments.textContent = currentPhoto.comments.length;
 
     // Удаляем все комментарии из шаблона и показываем сгенерированные
-    removeChildOfParent(bigPictureComments);
+    window.util.removeChild(bigPictureComments);
     showCommentsPicture(currentPhoto.comments);
 
     bigPicture.classList.remove('hidden');
