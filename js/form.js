@@ -17,16 +17,24 @@
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var imageUploadPreview = document.querySelector('.img-upload__preview');
+  var imgEffectSlider = document.querySelector('.img-upload__effect-level');
   var effectLevelPin = document.querySelector('.effect-level__pin');
   var effectRadio = document.querySelectorAll('.effects__radio');
   var effectList = document.querySelector('.effects__list');
   var textHashtags = document.querySelector('.text__hashtags');
   var textDescription = document.querySelector('.text__description');
+  var messageElement;
 
   // Закрытие формы загрузки изображения по ESC
   var onKeyCloseUploadImageForm = function (evt) {
     window.util.isEscFormEvent(evt, onCloseUploadImageForm);
   };
+
+  // Закрытие формы загрузки изображения по ESC
+  var onKeyCloseMessageInForm = function (evt) {
+    window.util.isEscFormEvent(evt, onCloseMessageInForm);
+  };
+
 
   // Изменяем масштаб фотографии
   var onChangeScaleControl = function (evt) {
@@ -35,7 +43,7 @@
     if (scale <= 100 && scale > 0) {
       scaleControlValue.value = scale;
       scale /= 100;
-      imageUploadPreview.style.transform = 'scale(' + scale + ')';
+      imageUploadPreview.querySelector('img').style.transform = 'scale(' + scale + ')';
     }
   };
 
@@ -46,29 +54,34 @@
     var currentEffect = evt.target.value !== 'none' ? 'effects__preview--' + evt.target.value : null;
     evt.target.checked = true;
     imageUploadPreview.querySelector('img').classList.add(currentEffect);
+    if (currentEffect === null) {
+      imgEffectSlider.classList.add('hidden');
+    } else {
+      imgEffectSlider.classList.remove('hidden');
+    }
   };
 
   var setEffectImage = function (value) {
-    imageUploadPreview.querySelector('img').style = value;
+    imageUploadPreview.querySelector('img').style.filter = value;
   };
 
   var setEffectLevel = function (effectValue) {
     var currentEffect = effectList.querySelector('input[name=effect]:checked').value;
     switch (currentEffect) {
       case 'chrome':
-        setEffectImage('filter: grayscale(' + (effectValue / 100).toFixed(2) + ')');
+        setEffectImage('grayscale(' + (effectValue / 100).toFixed(2) + ')');
         break;
       case 'sepia':
-        setEffectImage('filter: sepia(' + (effectValue / 100).toFixed(2) + ')');
+        setEffectImage('sepia(' + (effectValue / 100).toFixed(2) + ')');
         break;
       case 'marvin':
-        setEffectImage('filter: invert(' + effectValue + '%)');
+        setEffectImage('invert(' + effectValue + '%)');
         break;
       case 'phobos':
-        setEffectImage('filter: blur(' + (effectValue * 0.03) + 'px)');
+        setEffectImage('blur(' + (effectValue * 0.03) + 'px)');
         break;
       case 'heat':
-        setEffectImage('filter: brightness(' + (1 + (effectValue * 0.02)) + ')');
+        setEffectImage('brightness(' + (1 + (effectValue * 0.02)) + ')');
         break;
       default:
         imageUploadPreview.querySelector('img').style = null;
@@ -83,7 +96,7 @@
   };
 
   // Удаляем события на эффекты
-  var onDeleteEffectRadio = function () {
+  var deleteEffectRadio = function () {
     effectRadio.forEach(function (element) {
       element.removeEventListener('change', onChangeEffectRadio);
     });
@@ -163,13 +176,18 @@
     window.util.isEnterEvent(evt, onSubmitImageForm);
   };
 
+  var clearDataForm = function () {
+    window.slider.reset();
+    uploadForm.reset();
+  };
+
   // Функция отключения события при закрытии формы
   var disableEventsListener = function () {
     closeUploadImageForm.removeEventListener('click', onCloseUploadImageForm);
     scaleControlSmaller.removeEventListener('click', onChangeScaleControl);
     scaleControlBigger.removeEventListener('click', onChangeScaleControl);
     document.removeEventListener('keydown', onKeyCloseUploadImageForm);
-    onDeleteEffectRadio();
+    deleteEffectRadio();
     uploadForm.removeEventListener('submit', onSubmitImageForm);
     uploadSubmitButton.removeEventListener('click', onSubmitImageForm);
     uploadSubmitButton.removeEventListener('keydown', onEnterSubmitImageForm);
@@ -177,26 +195,56 @@
     bodyElement.classList.remove('modal-open');
   };
 
+  var onCloseMessageInForm = function () {
+    window.util.removeChild(messageElement);
+    messageElement.remove();
+    document.removeEventListener('click', onCloseMessageInForm);
+    document.removeEventListener('keydown', onKeyCloseMessageInForm);
+  };
+
+  var showMessageInForm = function (status, message) {
+    var fragment = document.createDocumentFragment();
+    var messageTemplate = document.querySelector('#' + status)
+      .content
+      .querySelector('.' + status);
+    messageElement = messageTemplate.cloneNode(true);
+    messageElement.querySelector('.' + status + '__title').textContent = message;
+    messageElement.style.zIndex = 10;
+    fragment.appendChild(messageElement);
+    document.querySelector('main').appendChild(fragment);
+    document.addEventListener('click', onCloseMessageInForm);
+    document.addEventListener('keydown', onKeyCloseMessageInForm);
+  };
+
+  var onSuccessSave = function (data, successMessage) {
+    onCloseUploadImageForm();
+    showMessageInForm('success', successMessage);
+  };
+
+  var onErrorSave = function (errorMessage) {
+    showMessageInForm('error', errorMessage);
+  };
+
   var onSubmitImageForm = function (evt) {
-    evt.preventDefault();
     if (validateHashtags() && validateComment()) {
-      disableEventsListener();
-      uploadForm.submit();
+      window.backend.save(new FormData(uploadForm), onSuccessSave, onErrorSave);
+      evt.preventDefault();
     }
   };
 
   var onCloseUploadImageForm = function () {
-    uploadImageOverlay.classList.add('hidden');
     uploadFileInput.addEventListener('change', onChangeUploadFile);
     disableEventsListener();
-    uploadForm.reset();
+    clearDataForm();
+    uploadImageOverlay.classList.add('hidden');
   };
 
   // Открываем форму загрузки изображения, подключаем события
   var onChangeUploadFile = function () {
     uploadImageOverlay.classList.remove('hidden');
     bodyElement.classList.add('modal-open');
-    scaleControlValue.value = 100;
+    imgEffectSlider.classList.add('hidden');
+    window.slider.reset();
     document.addEventListener('keydown', onKeyCloseUploadImageForm);
     uploadFileInput.removeEventListener('change', onChangeUploadFile);
     closeUploadImageForm.addEventListener('click', onCloseUploadImageForm);

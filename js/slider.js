@@ -2,6 +2,7 @@
 
 (function () {
   var DEFAULT_EFFECT_VALUE = 100;
+  var scaleControlValue = document.querySelector('.scale__control--value');
   var effectLevelPin = document.querySelector('.effect-level__pin');
   var effectLevelValue = document.querySelector('.effect-level__value');
   var effectLevelLine = document.querySelector('.effect-level__line');
@@ -39,20 +40,21 @@
       moveEvt.preventDefault();
 
       document.removeEventListener('mousemove', onMouseMove);
-      effectLevelPin.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('mouseup', onMouseUp);
     };
 
     document.addEventListener('mousemove', onMouseMove);
-    effectLevelPin.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mouseup', onMouseUp);
   };
 
   var resetSliderValue = function () {
-    effectLevelPin.style.left = '100%';
-    effectLevelDepth.style.width = '100%';
+    effectLevelPin.style.left = DEFAULT_EFFECT_VALUE + '%';
+    effectLevelDepth.style.width = DEFAULT_EFFECT_VALUE + '%';
     imageUploadPreview.style.filter = '';
     imageUploadPreview.querySelector('img').className = '';
     imageUploadPreview.querySelector('img').style = null;
     effectLevelValue.value = DEFAULT_EFFECT_VALUE;
+    scaleControlValue.value = DEFAULT_EFFECT_VALUE;
   };
 
   window.slider = {
