@@ -3,6 +3,7 @@
 window.util = function () {
   var KEY_ESC = 27;
   var KEY_ENTER = 13;
+  var DEBOUNCE_INTERVAL = 500;
 
   var textHashtags = document.querySelector('.text__hashtags');
   var textDescription = document.querySelector('.text__description');
@@ -36,10 +37,42 @@ window.util = function () {
     }
   };
 
+  var onDebounce = function (cb) {
+    var lastTimeout = null;
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
+  // Генерируем случайное целое число в диапазоне, включая минимальное и максимальное, для генерации свойств персонажа
+  var getRandomIntegerInRange = function (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  var onShuffleArr = function (arr) {
+    for (var i = 0; i < arr.length - 1; i++) {
+      var j = getRandomIntegerInRange(0, arr.length - 1);
+      var buffer = arr[i];
+      arr[i] = arr[j];
+      arr[j] = buffer;
+    }
+
+    return arr;
+  };
+
   return {
     isEscEvent: onEscPress,
     isEscFormEvent: onEscPressForm,
     isEnterEvent: onEnterPress,
+    debounce: onDebounce,
+    shuffle: onShuffleArr,
     removeChild: removeChildOfParent
   };
 }();

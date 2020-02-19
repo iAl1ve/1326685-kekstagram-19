@@ -69,10 +69,7 @@
 
   // Показываем фотографию в полноразмерном режиме
   var openBigPicture = function (evt) {
-    // Получим заново список всех сгенерированных изображений
-    var picturesArr = userListPictures.querySelectorAll('.picture');
     var element;
-    var arr = Array.from(picturesArr);
     if (evt.target.className === 'picture__img') {
       element = evt.target.parentElement;
     } else if (evt.target.className === 'picture') {
@@ -83,7 +80,12 @@
       document.addEventListener('keydown', onEscPressBigPicture);
       bigPictureClose.addEventListener('click', onCloseBigPicture);
       userListPictures.removeEventListener('keydown', openEnterBigPicture);
-      showBigPicture(window.picture.photos[arr.indexOf(element)]);
+
+      var currentPhoto = (window.picture.photos).find(function (photo) {
+        return photo.url === element.querySelector('.picture__img').getAttribute('src');
+      });
+
+      showBigPicture(currentPhoto);
     }
   };
 
