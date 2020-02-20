@@ -44,6 +44,10 @@
 
   var showRandomPhotos = function () {
     randomPhotos = window.util.shuffle(defaultPhotos.slice()).slice(0, COUNT_IMG_RANDOM);
+    // Удаляем повторяющиеся фотографии в соответствии с ТЗ
+    randomPhotos = randomPhotos.filter(function (item, pos) {
+      return randomPhotos.indexOf(item) === pos;
+    });
 
     updatePictures(randomPhotos);
   };

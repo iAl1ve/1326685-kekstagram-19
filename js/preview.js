@@ -11,16 +11,14 @@
   var bigPictureImg = document.querySelector('.big-picture__img');
   var bigPictureLike = document.querySelector('.likes-count');
   var bigPictureDescription = document.querySelector('.social__caption');
-  var bigPictureCountComments = document.querySelector('.comments-count');
+  var bigPictureCountComments = document.querySelector('.social__comment-count');
   var bigPictureComments = document.querySelector('.social__comments');
-
-  // Cкрываем по условию блок счётчика комментариев и загрузки новых
-  document.querySelector('.social__comment-count').classList.add('hidden');
-  document.querySelector('.comments-loader').classList.add('hidden');
+  var commentsLoader = document.querySelector('.comments-loader');
+  var arrComments = [];
+  var countCommentsRender;
 
   // Показываем комментарии для большого изображения
   var renderComments = function (comment) {
-
     var newComment = document.createElement('li');
     newComment.classList.add('social__comment');
     var newAvatarPicture = document.createElement('img');
@@ -40,15 +38,55 @@
     return newComment;
   };
 
-  // Показываем все комментарии к фотографии
-  var showCommentsPicture = function (comments) {
+  var addCommentsPicture = function (comments) {
     var fragment = document.createDocumentFragment();
+    var fragmentCountComments = document.createDocumentFragment();
     var countComments = comments.length > COMMENTS_COUNT ? COMMENTS_COUNT : comments.length;
+    countCommentsRender += countComments;
     for (var i = 0; i < countComments; i++) {
-      fragment.appendChild(renderComments(comments[i]));
+      fragment.appendChild(renderComments(comments.shift()));
     }
 
+    var commentsCountSpan = bigPictureCountComments.querySelector('.comments-count');
+    // Удаляем содержимое блока количества комментариев и генерируем новое
+    window.util.removeChild(bigPictureCountComments);
+    fragmentCountComments.textContent = countCommentsRender + ' из ';
+    fragmentCountComments.appendChild(commentsCountSpan);
+    fragmentCountComments.innerHtml = fragmentCountComments.innerHtml + ' комментариев';
+
+    // Показываем все блоки
+    bigPictureCountComments.appendChild(fragmentCountComments);
     bigPictureComments.appendChild(fragment);
+  };
+
+  var onLoadMoreComments = function () {
+    addCommentsPicture(arrComments);
+    if (arrComments.length === 0) {
+      commentsLoader.classList.add('hidden');
+    }
+  };
+
+  // Подгружаем больше комментариев по ENTER
+  var onLoadEnterMoreComments = function (evt) {
+    window.util.isEnterEvent(evt, onLoadMoreComments);
+  };
+
+  // Показываем первые комментарии к фотографии
+  var showCommentsPicture = function (comments) {
+    arrComments = comments.slice();
+    countCommentsRender = 0;
+    // Удаляем все комментарии из шаблона и показываем сгенерированные
+    window.util.removeChild(bigPictureComments);
+
+    if (comments.length > COMMENTS_COUNT) {
+      commentsLoader.classList.remove('hidden');
+    } else {
+      commentsLoader.classList.add('hidden');
+    }
+
+    bigPictureCountComments.querySelector('.comments-count').textContent = comments.length;
+
+    addCommentsPicture(arrComments);
   };
 
   // Показываем фотографию в полноразмерном режиме
@@ -57,11 +95,11 @@
 
     bigPictureLike.textContent = currentPhoto.like;
     bigPictureDescription.textContent = currentPhoto.description;
-    bigPictureCountComments.textContent = currentPhoto.comments.length;
 
-    // Удаляем все комментарии из шаблона и показываем сгенерированные
-    window.util.removeChild(bigPictureComments);
     showCommentsPicture(currentPhoto.comments);
+
+    commentsLoader.addEventListener('click', onLoadMoreComments);
+    commentsLoader.addEventListener('keydown', onLoadEnterMoreComments);
 
     bigPicture.classList.remove('hidden');
     bodyElement.classList.add('modal-open');
@@ -79,7 +117,7 @@
     if (evt.target.className === 'picture__img' || evt.target.className === 'picture') {
       document.addEventListener('keydown', onEscPressBigPicture);
       bigPictureClose.addEventListener('click', onCloseBigPicture);
-      userListPictures.removeEventListener('keydown', openEnterBigPicture);
+      userListPictures.removeEventListener('keydown', onOpenEnterBigPicture);
 
       var currentPhoto = (window.picture.photos).find(function (photo) {
         return photo.url === element.querySelector('.picture__img').getAttribute('src');
@@ -90,7 +128,7 @@
   };
 
   // Открытие большой фотографию по ENTER
-  var openEnterBigPicture = function (evt) {
+  var onOpenEnterBigPicture = function (evt) {
     window.util.isEnterEvent(evt, openBigPicture);
   };
 
@@ -100,7 +138,9 @@
     bodyElement.classList.remove('modal-open');
     document.removeEventListener('keydown', onEscPressBigPicture);
     bigPictureClose.removeEventListener('click', onCloseBigPicture);
-    userListPictures.addEventListener('keydown', openEnterBigPicture);
+    commentsLoader.removeEventListener('click', onLoadMoreComments);
+    commentsLoader.removeEventListener('keydown', onLoadEnterMoreComments);
+    userListPictures.addEventListener('keydown', onOpenEnterBigPicture);
   };
 
   var onEscPressBigPicture = function (evt) {
@@ -108,5 +148,5 @@
   };
 
   userListPictures.addEventListener('click', openBigPicture);
-  userListPictures.addEventListener('keydown', openEnterBigPicture);
+  userListPictures.addEventListener('keydown', onOpenEnterBigPicture);
 })();
