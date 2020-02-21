@@ -5,6 +5,7 @@
   var HASHTAG_COUNT = 5;
   var HASHTAG_LENGTH = 20;
   var COMMENTS_LENGTH = 140;
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var bodyElement = document.querySelector('body');
 
@@ -16,7 +17,7 @@
   var scaleControlValue = document.querySelector('.scale__control--value');
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
-  var imageUploadPreview = document.querySelector('.img-upload__preview');
+  var imageUploadPreview = document.querySelector('.img-upload__preview img');
   var imgEffectSlider = document.querySelector('.img-upload__effect-level');
   var effectLevelPin = document.querySelector('.effect-level__pin');
   var effectRadio = document.querySelectorAll('.effects__radio');
@@ -43,7 +44,7 @@
     if (scale <= 100 && scale > 0) {
       scaleControlValue.value = scale;
       scale /= 100;
-      imageUploadPreview.querySelector('img').style.transform = 'scale(' + scale + ')';
+      imageUploadPreview.style.transform = 'scale(' + scale + ')';
     }
   };
 
@@ -53,7 +54,7 @@
     window.slider.reset();
     var currentEffect = evt.target.value !== 'none' ? 'effects__preview--' + evt.target.value : null;
     evt.target.checked = true;
-    imageUploadPreview.querySelector('img').classList.add(currentEffect);
+    imageUploadPreview.classList.add(currentEffect);
     if (currentEffect === null) {
       imgEffectSlider.classList.add('hidden');
     } else {
@@ -62,7 +63,7 @@
   };
 
   var setEffectImage = function (value) {
-    imageUploadPreview.querySelector('img').style.filter = value;
+    imageUploadPreview.style.filter = value;
   };
 
   var setEffectLevel = function (effectValue) {
@@ -84,7 +85,7 @@
         setEffectImage('brightness(' + (1 + (effectValue * 0.02)) + ')');
         break;
       default:
-        imageUploadPreview.querySelector('img').style = null;
+        imageUploadPreview.style = null;
     }
   };
 
@@ -177,7 +178,7 @@
   };
 
   var clearDataForm = function () {
-    window.slider.reset();
+    window.slider.reset('all');
     uploadForm.reset();
   };
 
@@ -239,12 +240,11 @@
     uploadImageOverlay.classList.add('hidden');
   };
 
-  // Открываем форму загрузки изображения, подключаем события
-  var onChangeUploadFile = function () {
+  var addOpenFormEvents = function () {
+    window.slider.reset('all');
+    imgEffectSlider.classList.add('hidden');
     uploadImageOverlay.classList.remove('hidden');
     bodyElement.classList.add('modal-open');
-    imgEffectSlider.classList.add('hidden');
-    window.slider.reset();
     document.addEventListener('keydown', onKeyCloseUploadImageForm);
     uploadFileInput.removeEventListener('change', onChangeUploadFile);
     closeUploadImageForm.addEventListener('click', onCloseUploadImageForm);
@@ -255,6 +255,27 @@
     uploadForm.addEventListener('submit', onSubmitImageForm);
     uploadSubmitButton.addEventListener('click', onSubmitImageForm);
     uploadSubmitButton.addEventListener('keydown', onEnterSubmitImageForm);
+  };
+
+  // Открываем форму загрузки изображения
+  var onChangeUploadFile = function () {
+    var file = uploadFileInput.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        imageUploadPreview.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+      addOpenFormEvents();
+    }
   };
 
   uploadFileInput.addEventListener('change', onChangeUploadFile);
