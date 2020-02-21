@@ -81,13 +81,12 @@
 
   // Показываем изображения и добавляем в массив для отображения
   var onSuccessLoad = function (pictures) {
-    pictures.forEach(function (element, index) {
+    pictures.forEach(function (element) {
       defaultPhotos.push({
         url: element.url,
         description: element.description,
         likes: element.likes,
-        comments: element.comments,
-        id: index
+        comments: element.comments
       });
     });
     updatePictures(pictures);
