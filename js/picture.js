@@ -79,6 +79,11 @@
     }
   });
 
+  // Применение эффектов по ENTER
+  var onEnterFilter = function (evt) {
+    window.util.isEnterEvent(evt, onApplyFilterEvent);
+  };
+
   // Показываем изображения и добавляем в массив для отображения
   var onSuccessLoad = function (pictures) {
     pictures.forEach(function (element) {
@@ -93,6 +98,7 @@
 
     imgFilters.classList.remove('img-filters--inactive');
     imgFilters.addEventListener('click', onApplyFilterEvent);
+    imgFilters.addEventListener('keydown', onEnterFilter);
   };
 
   var onErrorLoad = function (errorMessage) {
