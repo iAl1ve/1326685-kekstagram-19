@@ -12,12 +12,11 @@
   var changeEffectLevelPin = function () {
     var saturation = (effectLevelPin.offsetLeft / effectLevelLine.clientWidth).toFixed(2) * 100;
     effectLevelValue.value = saturation;
-    window.form.setEffectLevel(saturation);
+    window.formEffects.setLevel(saturation);
   };
 
   var moveSetup = function (evt) {
     evt.preventDefault();
-
 
     var startCoordsX = evt.clientX;
 
@@ -33,7 +32,6 @@
         effectLevelDepth.style.width = newCoordX + 'px';
         changeEffectLevelPin();
       }
-
     };
 
     var onMouseUp = function (moveEvt) {

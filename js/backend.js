@@ -3,14 +3,14 @@
 (function () {
   var URL = 'https://js.dump.academy/kekstagram/data';
   var URL_SAVE = 'https://js.dump.academy/kekstagram/';
+  var TIMEOUT_IN_MS = 10000;
+  var READY_STATE_LOAD = 4;
 
   var StatusCode = {
     OK: 200,
     INVALID_REQUEST: 400,
     NOT_FOUND: 404
   };
-  var TIMEOUT_IN_MS = 10000;
-  var READY_STATE_LOAD = 4;
 
   var loadData = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
