@@ -12,10 +12,10 @@
   var changeEffectLevelPin = function () {
     var saturation = (effectLevelPin.offsetLeft / effectLevelLine.clientWidth).toFixed(2) * 100;
     effectLevelValue.value = saturation;
-    window.formEffects.setLevel(saturation);
+    window.formEffects.onSetLevel(saturation);
   };
 
-  var moveSetup = function (evt) {
+  var onMoveSetup = function (evt) {
     evt.preventDefault();
 
     var startCoordsX = evt.clientX;
@@ -59,7 +59,7 @@
   };
 
   window.slider = {
-    move: moveSetup,
+    onMove: onMoveSetup,
     reset: resetSliderValue
   };
 })();

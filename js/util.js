@@ -1,6 +1,6 @@
 'use strict';
 
-window.util = function () {
+(function () {
   var KEY_ESC = 27;
   var KEY_ENTER = 13;
   var DEBOUNCE_INTERVAL = 500;
@@ -67,7 +67,7 @@ window.util = function () {
     return arr;
   };
 
-  return {
+  window.util = {
     isEscEvent: onEscPress,
     isEscFormEvent: onEscPressForm,
     isEnterEvent: onEnterPress,
@@ -75,4 +75,4 @@ window.util = function () {
     shuffle: onShuffleArr,
     removeChild: removeChildOfParent
   };
-}();
+})();

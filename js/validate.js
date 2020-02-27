@@ -1,6 +1,6 @@
 'use strict';
 
-window.validate = function () {
+(function () {
   var HASHTAG_COUNT = 5;
   var HASHTAG_LENGTH = 20;
   var COMMENTS_LENGTH = 140;
@@ -71,8 +71,8 @@ window.validate = function () {
     return validate;
   };
 
-  return {
+  window.validate = {
     hashtags: validateHashtags,
     comment: validateComment
   };
-}();
+})();

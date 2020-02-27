@@ -62,8 +62,8 @@
   };
 
   window.formEffects = {
-    setLevel: setEffectLevel,
-    change: onChangeEffectRadio,
-    scaleControl: onChangeScaleControl
+    onSetLevel: setEffectLevel,
+    onChange: onChangeEffectRadio,
+    onScaleControl: onChangeScaleControl
   };
 })();

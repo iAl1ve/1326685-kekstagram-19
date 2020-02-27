@@ -53,9 +53,11 @@
   };
 
   var showDiscussedPhotos = function () {
-    discussedPhotos = defaultPhotos.slice().sort(function (a, b) {
-      return b.comments.length - a.comments.length;
-    });
+    if (discussedPhotos.length === 0) {
+      discussedPhotos = defaultPhotos.slice().sort(function (a, b) {
+        return b.comments.length - a.comments.length;
+      });
+    }
 
     updatePictures(discussedPhotos);
   };
