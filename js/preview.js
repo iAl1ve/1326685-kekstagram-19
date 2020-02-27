@@ -106,7 +106,7 @@
   };
 
   // Показываем фотографию в полноразмерном режиме
-  var openBigPicture = function (evt) {
+  var onOpenBigPicture = function (evt) {
     var element;
     if (evt.target.className === 'picture__img') {
       element = evt.target.parentElement;
@@ -129,7 +129,7 @@
 
   // Открытие большой фотографию по ENTER
   var onOpenEnterBigPicture = function (evt) {
-    window.util.isEnterEvent(evt, openBigPicture);
+    window.util.isEnterEvent(evt, onOpenBigPicture);
   };
 
   // Функции закрытия полноразмернго режима для просмотра фотографии
@@ -147,6 +147,6 @@
     window.util.isEscEvent(evt, onCloseBigPicture);
   };
 
-  userListPictures.addEventListener('click', openBigPicture);
+  userListPictures.addEventListener('click', onOpenBigPicture);
   userListPictures.addEventListener('keydown', onOpenEnterBigPicture);
 })();

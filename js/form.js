@@ -13,7 +13,7 @@
   var imageUploadPreview = document.querySelector('.img-upload__preview img');
   var imgEffectSlider = document.querySelector('.img-upload__effect-level');
   var effectLevelPin = document.querySelector('.effect-level__pin');
-  var effectRadio = document.querySelectorAll('.effects__radio');
+  var effects = document.querySelectorAll('.effects__radio');
   var scaleControlSmaller = document.querySelector('.scale__control');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var textHashtags = document.querySelector('.text__hashtags');
@@ -31,16 +31,16 @@
   };
 
   // Добавляем события на эффекты
-  var onAddEffectRadio = function () {
-    effectRadio.forEach(function (element) {
-      element.addEventListener('change', window.formEffects.change);
+  var onAddEffectsRadio = function () {
+    effects.forEach(function (element) {
+      element.addEventListener('change', window.formEffects.onChange);
     });
   };
 
   // Удаляем события на эффекты
-  var deleteEffectRadio = function () {
-    effectRadio.forEach(function (element) {
-      element.removeEventListener('change', window.formEffects.change);
+  var deleteEffectsRadio = function () {
+    effects.forEach(function (element) {
+      element.removeEventListener('change', window.formEffects.onChange);
     });
   };
 
@@ -59,14 +59,14 @@
   // Функция отключения события при закрытии формы
   var disableEventsListener = function () {
     closeUploadImageForm.removeEventListener('click', onCloseUploadImageForm);
-    scaleControlSmaller.removeEventListener('click', window.formEffects.scaleControl);
-    scaleControlBigger.removeEventListener('click', window.formEffects.scaleControl);
+    scaleControlSmaller.removeEventListener('click', window.formEffects.onScaleControl);
+    scaleControlBigger.removeEventListener('click', window.formEffects.onScaleControl);
     document.removeEventListener('keydown', onKeyCloseUploadImageForm);
-    deleteEffectRadio();
+    deleteEffectsRadio();
     uploadForm.removeEventListener('submit', onSubmitImageForm);
     uploadSubmitButton.removeEventListener('click', onSubmitImageForm);
     uploadSubmitButton.removeEventListener('keydown', onEnterSubmitImageForm);
-    effectLevelPin.removeEventListener('mousedown', window.slider.move);
+    effectLevelPin.removeEventListener('mousedown', window.slider.onMove);
     bodyElement.classList.remove('modal-open');
   };
 
@@ -122,10 +122,10 @@
     document.addEventListener('keydown', onKeyCloseUploadImageForm);
     uploadFileInput.removeEventListener('change', onChangeUploadFile);
     closeUploadImageForm.addEventListener('click', onCloseUploadImageForm);
-    scaleControlSmaller.addEventListener('click', window.formEffects.scaleControl);
-    scaleControlBigger.addEventListener('click', window.formEffects.scaleControl);
-    onAddEffectRadio();
-    effectLevelPin.addEventListener('mousedown', window.slider.move);
+    scaleControlSmaller.addEventListener('click', window.formEffects.onScaleControl);
+    scaleControlBigger.addEventListener('click', window.formEffects.onScaleControl);
+    onAddEffectsRadio();
+    effectLevelPin.addEventListener('mousedown', window.slider.onMove);
     uploadForm.addEventListener('submit', onSubmitImageForm);
     uploadSubmitButton.addEventListener('click', onSubmitImageForm);
     uploadSubmitButton.addEventListener('keydown', onEnterSubmitImageForm);

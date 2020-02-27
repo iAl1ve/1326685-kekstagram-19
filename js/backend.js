@@ -12,11 +12,16 @@
     NOT_FOUND: 404
   };
 
-  var loadData = function (onLoad, onError) {
+  var createXhr = function () {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.timeout = TIMEOUT_IN_MS;
 
+    return xhr;
+  };
+
+  var loadData = function (onLoad, onError) {
+    var xhr = createXhr();
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK && xhr.readyState === READY_STATE_LOAD) {
         onLoad(xhr.response);
@@ -49,10 +54,7 @@
   };
 
   var saveData = function (data, onLoad, onError) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.timeout = TIMEOUT_IN_MS;
-
+    var xhr = createXhr();
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK && xhr.readyState === READY_STATE_LOAD) {
         onLoad(xhr.response, 'Изображение успешно загружено');
